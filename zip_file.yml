@@ -1,0 +1,23 @@
+---
+- name: To archive files to zip from /var/log folder
+  hosts: databaseserver
+  vars:
+    src: "/var/log/"
+    dest: "/var/log/"
+  tasks:
+  - archive:
+      path: "{{ src }}"
+      dest: /var/log/exclude_logflies.zip
+      format: zip
+      exclude_path:
+      - /var/log/*.log
+      - /var/log/*.out
+  - name: To copy file from remote machine to local machine
+    fetch:
+      src: /var/log/exclude_logflies.zip
+      dest: /logs/
+      flat: yes
+  - name: To delete zip file from remote machine
+    file:
+      path: /var/log/exclude_logflies.zip
+      state: absent
